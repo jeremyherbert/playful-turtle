@@ -1,3 +1,5 @@
+/* SPDX-License-Identifier: MIT */
+
 #include "tusb.h"
 
 #define _PID_MAP(itf, n)  ( (CFG_TUD_##itf) << (n) )

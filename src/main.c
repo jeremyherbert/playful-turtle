@@ -1,3 +1,5 @@
+/* SPDX-License-Identifier: MIT */
+
 #include "stm32f0xx.h"
 #include "stm32f0xx_ll_rcc.h"
 #include "stm32f0xx_ll_system.h"
