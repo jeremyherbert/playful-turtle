@@ -45,9 +45,11 @@ static uint8_t const desc_hid_report[] = {
     HID_USAGE_MAX    ( 16                                     ) ,\
     HID_LOGICAL_MIN  ( 0                                      ) ,\
     HID_LOGICAL_MAX  ( 1                                      ) ,\
+    HID_PHYSICAL_MIN (0), \
+    HID_PHYSICAL_MAX (1), \
     HID_REPORT_COUNT ( 16                                     ) ,\
     HID_REPORT_SIZE  ( 1                                      ) ,\
-    HID_INPUT        ( HID_DATA | HID_ARRAY | HID_ABSOLUTE    ) ,\
+    HID_INPUT        ( HID_DATA | HID_VARIABLE | HID_ABSOLUTE    ) ,\
     /* X, Y, RX, RY, RZ (min -127, max 127 ) */ \
     HID_USAGE_PAGE   ( HID_USAGE_PAGE_DESKTOP                 ) ,\
     HID_LOGICAL_MIN  ( 0x81                                   ) ,\
@@ -60,9 +62,12 @@ static uint8_t const desc_hid_report[] = {
     HID_REPORT_COUNT ( 5                                      ) ,\
     HID_REPORT_SIZE  ( 8                                     ) ,\
     HID_INPUT        ( HID_DATA | HID_VARIABLE | HID_ABSOLUTE ) ,\
+
     HID_USAGE_PAGE   ( HID_USAGE_PAGE_DESKTOP                 ) ,\
     HID_LOGICAL_MIN  ( 0x0                                   ) ,\
     HID_LOGICAL_MAX  ( 0x1                                   ) ,\
+    HID_PHYSICAL_MIN (0), \
+    HID_PHYSICAL_MAX (1), \
     HID_USAGE        ( HID_USAGE_DESKTOP_DPAD_UP                   ) ,\
     HID_USAGE        ( HID_USAGE_DESKTOP_DPAD_DOWN                    ) ,\
     HID_USAGE        ( HID_USAGE_DESKTOP_DPAD_LEFT                   ) ,\
