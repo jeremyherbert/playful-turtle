@@ -5,7 +5,7 @@ This repository contains a firmware implementation of a composite USB device whi
 - USB to UART conversion (fixed at a baudrate of 9600)
 - USB HID gamepad/joystick interface via SPI
 
-It is designed to be used with the turtleboard hardware (STM32F042F6P6). 
+It is designed to be used with the [turtleboard hardware](https://github.com/jeremyherbert/turtleboard) (STM32F042F6P6). 
 
 **Important notes:**
 
