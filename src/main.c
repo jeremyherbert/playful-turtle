@@ -15,6 +15,8 @@
 #include "SEGGER_RTT.h"
 #include "tusb.h"
 
+volatile uint8_t led_blink_ms = 500;
+
 /*****************************************************
  * HID/SPI interface
  ****************************************************/
@@ -119,6 +121,7 @@ void hid_process(void) {
         __enable_irq();
 
         tud_hid_report(0, buf, 8);
+        led_blink_ms = 100;
         SEGGER_RTT_printf(0, "hid report sent\n");
         hid_pending = false;
     }
@@ -231,6 +234,7 @@ void cdc_process() {
                     LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_4);
                     LL_DMA_SetDataLength(DMA1, LL_DMA_CHANNEL_4, count);
                     LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_4);
+                    led_blink_ms = 100;
                 }
             }
         }
@@ -242,6 +246,7 @@ void cdc_process() {
         LL_USART_EnableIT_RXNE(USART2);
         if (count) {
             tud_cdc_write(buf, count);
+            led_blink_ms = 100;
         }
         tud_cdc_write_flush();
     } else {
@@ -315,8 +320,24 @@ void system_init() {
     LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOF);
 }
 
+void led_gpio_init() {
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    GPIO_InitStruct.Alternate = LL_GPIO_AF_0;
+    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_1);
+}
+
 int main() {
     system_init();
+    led_gpio_init();
     spi_init();
     uart_init(9600); // force 9600 baud, do not change based on USB request
     memset(hid_buf, 0, 8); // initialise HID buffer to zeros
@@ -331,8 +352,30 @@ int main() {
     }
 }
 
+volatile uint8_t tick_count = 0;
 void SysTick_Handler(void) {
-    // unused
+    bool blinking = false;
+
+    if (led_blink_ms == 0) {
+        blinking = false;
+    } else {
+        led_blink_ms--;
+        blinking = true;
+    }
+
+    if (blinking) {
+        if (tick_count++ >= 50) {
+            tick_count = 0;
+        }
+        if (tick_count < 25) {
+            LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_1);
+        } else {
+            LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_1);
+        }
+    } else {
+        LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_1);
+        tick_count = 0;
+    }
 }
 
 void NMI_Handler(void) {

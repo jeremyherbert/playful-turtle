@@ -52,7 +52,7 @@ set(MCU_FILES       src/startup_stm32f042f6px.s
                     src/system_stm32f0xx.c)
 
 set(SRC_FILES       src/main.c
-                    src/descriptors.c)
+                    src/descriptors.c src/stm32f0xx_hal_conf.h)
 
 include_directories(src
                     libs/ringbuf
